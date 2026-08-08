@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vehicle Kundali Pro - Form 23 Dashboard</title>
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* ==========================================================================
+       THEME DESIGN SYSTEM: DEEP OCEAN HYDRO V3.0
+       ========================================================================== */
+    :root {
+      --bg-ocean: #031329;
+      --card-navy: #0b1d3a;
+      --border-cyan: rgba(6, 182, 212, 0.25);
+      --border-cyan-glow: rgba(6, 182, 212, 0.6);
+      --accent-cyan: #06b6d4;
+      --cyan-light: #22d3ee;
+      --text-white: #f8fafc;
+      --text-slate: #94a3b8;
+      --gold-main: #f59e0b;
+      --gold-dark: #d97706;
+      --emerald-green: #10b981;
+      --alert-red: #ef4444;
+      --orange-fire: #f97316;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-ocean);
+      background-image: radial-gradient(circle at 50% 0%, #0d284f 0%, var(--bg-ocean) 75%);
+      background-size: 200% 200%;
+      animation: hydroPulse 12s ease infinite;
+      color: var(--text-white);
+      min-height: 100vh;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    @keyframes hydroPulse {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       SEARCH HEADER & COOLDOWN LOCK
+       ========================================================================== */
+    .search-card {
+      background: var(--card-navy);
+      border: 1px solid var(--border-cyan);
+      border-radius: 20px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .search-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cyan-light);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-input-wrapper {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-input-wrapper i {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent-cyan);
+      font-size: 1.1rem;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(3, 19, 41, 0.7);
+      border: 1px solid var(--border-cyan);
+      border-radius: 12px;
+      padding: 0 16px 0 48px;
+      color: #ffffff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--cyan-light);
+      box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    }
+
+    .btn-search {
+      height: 52px;
+      padding: 0 32px;
+      background: linear-gradient(135deg, #06b6d4, #0284c7);
+      border: none;
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      min-width: 160px;
+    }
+
+    .btn-search:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+    }
+
+    .btn-search:disabled {
+      background: #334155;
+      color: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       HERO VEHICLE CARD (3D METALLIC EMBOSSED PLATE)
+       ========================================================================== */
+    .hero-card {
+      background: var(--card-navy);
+      border: 1px solid var(--border-cyan);
+      border-radius: 20px;
+      padding: 28px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      margin-bottom: 25px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 30px;
+      align-items: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+    }
+
+    .number-plate-3d {
+      background: linear-gradient(135deg, var(--gold-main), var(--gold-dark));
+      border: 3px solid #fef08a;
+      border-radius: 12px;
+      padding: 12px 28px;
+      box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+      display: inline-block;
+      text-align: center;
+      position: relative;
+    }
+
+    .plate-ind {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.65rem;
+      font-weight: 900;
+      color: #000;
+      line-height: 1;
+    }
+
+    .plate-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 3px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.6), -1px -1px 0px rgba(0, 0, 0, 0.8);
+    }
+
+    .hero-details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-title-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .vehicle-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .vehicle-svg-glow {
+      font-size: 2.2rem;
+      color: var(--cyan-light);
+      filter: drop-shadow(0 0 12px var(--accent-cyan));
+      animation: floatIcon 3s ease-in-out infinite;
+    }
+
+    @keyframes floatIcon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge-fuel {
+      background: rgba(249, 115, 22, 0.15);
+      border: 1px solid var(--orange-fire);
+      color: var(--orange-fire);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 12px rgba(249, 115, 22, 0.3);
+    }
+
+    .badge-fuel.diesel-ev {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: var(--emerald-green);
+      color: var(--emerald-green);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-norm {
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid var(--accent-cyan);
+      color: var(--cyan-light);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       MODULAR GRID SYSTEM (3x6 GRID)
+       ========================================================================== */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 992px) {
+      .grid-container { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 640px) {
+      .grid-container { grid-template-columns: 1fr; }
+    }
+
+    .data-card {
+      background: var(--card-navy);
+      border: 1px solid var(--border-cyan);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .data-card:hover {
+      border-color: var(--border-cyan-glow);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(6, 182, 212, 0.2);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--cyan-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      font-size: 0.78rem;
+      color: var(--text-slate);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .field-value {
+      font-size: 0.98rem;
+      color: var(--cyan-light);
+      font-weight: 600;
+      word-break: break-word;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .copy-btn {
+      background: rgba(6, 182, 212, 0.15);
+      border: none;
+      color: var(--cyan-light);
+      padding: 4px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-cyan);
+      color: #ffffff;
+    }
+
+    /* PUC PROGRESS BAR */
+    .puc-progress-bg {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .puc-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 10px;
+      transition: width 0.6s ease;
+    }
+
+    /* INTERACTIVE FINANCED ACCORDION */
+    .financed-card {
+      cursor: pointer;
+    }
+
+    .finance-badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .finance-badge.financed {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--emerald-green);
+      color: var(--emerald-green);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    }
+
+    .finance-badge.cash {
+      background: rgba(148, 163, 184, 0.15);
+      border: 1px solid var(--text-slate);
+      color: var(--text-slate);
+    }
+
+    .accordion-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, margin-top 0.4s ease;
+    }
+
+    .accordion-content.expanded {
+      max-height: 200px;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed rgba(255, 255, 255, 0.1);
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--card-navy);
+      border: 1px solid var(--accent-cyan);
+      color: var(--cyan-light);
+      padding: 12px 24px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 9999;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* PRINT STYLESHEET */
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+
+      .search-card, .btn-search, .copy-btn, .toast {
+        display: none !important;
+      }
+
+      .hero-card, .data-card {
+        background: #ffffff !important;
+        border: 1px solid #ccc !important;
+        color: #000000 !important;
+        box-shadow: none !important;
+      }
+
+      .card-title, .field-label, .vehicle-title {
+        color: #000000 !important;
+      }
+
+      .field-value {
+        color: #1e293b !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <!-- SEARCH CARD -->
+    <div class="search-card">
+      <div class="search-title">
+        <i class="fa-solid fa-magnifying-glass"></i> Vehicle Kundali Search (Form 23)
+      </div>
+      <div class="search-box">
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-car"></i>
+          <input type="text" id="vehicleInput" class="search-input" placeholder="Enter Reg No. (e.g. MH47BM9865)" oninput="sanitizeInput(this)">
+        </div>
+        <button id="searchBtn" class="btn-search" onclick="fetchVehicleData()">
+          <i class="fa-solid fa-bolt"></i> Fetch Details
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN RESULT CONTAINER (DYNAMIC) -->
+    <div id="resultWrapper" style="display: none;">
+
+      <!-- HERO VEHICLE CARD -->
+      <div class="hero-card">
+        <div class="number-plate-3d">
+          <span class="plate-ind">IND</span>
+          <div id="plateNo" class="plate-text">MH47BM9865</div>
+        </div>
+
+        <div class="hero-details">
+          <div class="hero-title-group">
+            <i id="vehicleTypeIcon" class="fa-solid fa-motorcycle vehicle-svg-glow"></i>
+            <div id="vehicleModelTitle" class="vehicle-title">Honda Activa</div>
+          </div>
+          <div class="hero-badges">
+            <div id="fuelBadge" class="badge-fuel"><i class="fa-solid fa-gas-pump"></i> Petrol</div>
+            <div id="normBadge" class="badge-norm"><i class="fa-solid fa-leaf"></i> BS-VI / Standard</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODULAR GRID SYSTEM (3x6) -->
+      <div class="grid-container">
+
+        <!-- 1. OWNER INFO CARD -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-user-shield"></i></div>
+            <div class="card-title">Owner Information</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Owner Name</div>
+            <div id="ownerName" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Ownership Serial</div>
+            <div id="ownerSerial" class="field-value">1st Owner / Active</div>
+          </div>
+        </div>
+
+        <!-- 2. FULL ADDRESS DETAILS CARD (BOTH STACKED) -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
+            <div class="card-title">Address Details</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label" style="color: var(--cyan-light);">Current Address</div>
+            <div id="corrAddress" class="field-value" style="font-size: 0.85rem;">--</div>
+          </div>
+          <div class="field-group" style="margin-top: 10px;">
+            <div class="field-label" style="color: var(--cyan-light);">Permanent Address</div>
+            <div id="permAddress" class="field-value" style="font-size: 0.85rem;">--</div>
+          </div>
+        </div>
+
+        <!-- 3. REGISTRATION AUTHORITY CARD -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="card-title">Registration Authority</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Registering Authority (RTO)</div>
+            <div id="rtoDetails" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">State Code</div>
+            <div id="stateCode" class="field-value">--</div>
+          </div>
+        </div>
+
+        <!-- 4. IMPORTANT DATES CARD -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div>
+            <div class="card-title">Important Dates</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Registration Date</div>
+            <div id="regDate" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">RC Fitness / Expiry Date</div>
+            <div id="fitnessDate" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Road Tax Status</div>
+            <div class="field-value" style="color: var(--emerald-green);">PAID / UPTO DATE</div>
+          </div>
+        </div>
+
+        <!-- 5. PUC DETAILS CARD (VISUAL PROGRESS BAR) -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-cloud-sun"></i></div>
+            <div class="card-title">PUC Details</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">PUC Number</div>
+            <div id="pucNo" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">PUC Expiry Date</div>
+            <div id="pucValidDate" class="field-value">--</div>
+            <div class="puc-progress-bg">
+              <div id="pucProgressBar" class="puc-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. TECHNICAL SPECIFICATIONS CARD -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
+            <div class="card-title">Technical Specs</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Chassis Number</div>
+            <div class="field-value">
+              <span id="chassisNo">--</span>
+              <button class="copy-btn" onclick="copyToClipboard('chassisNo')"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Engine Number</div>
+            <div class="field-value">
+              <span id="engineNo">--</span>
+              <button class="copy-btn" onclick="copyToClipboard('engineNo')"><i class="fa-regular fa-copy"></i></button>
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Cubic Capacity & Mfg Year</div>
+            <div id="techSpecsMisc" class="field-value">--</div>
+          </div>
+        </div>
+
+        <!-- 7. INTERACTIVE FINANCED STATUS CARD -->
+        <div class="data-card financed-card" onclick="toggleFinanceAccordion()">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="card-title">Financed Status</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Hypothecation Status</div>
+            <div class="field-value">
+              <span id="financeBadge" class="finance-badge cash"><i class="fa-solid fa-shield-halved"></i> ON CASH</span>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-slate);"></i>
+            </div>
+          </div>
+          <div id="financeAccordion" class="accordion-content">
+            <div class="field-label">Financier / Bank Name</div>
+            <div id="financierName" class="field-value" style="font-size: 0.9rem;">No Active Hypothecation</div>
+          </div>
+        </div>
+
+        <!-- 8. INSURANCE DETAILS CARD -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
+            <div class="card-title">Insurance Details</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Previous Policy Number</div>
+            <div id="policyNo" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Insurance Status</div>
+            <div class="field-value" style="color: var(--emerald-green);">ACTIVE / RECORDED</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toast" class="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMsg">Copied to clipboard!</span>
+  </div>
+
+  <script>
+    // Sanitization & Capitalization Lock
+    function sanitizeInput(input) {
+      input.value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    }
+
+    // Interactive Cooldown Timer
+    function startCooldownTimer(seconds) {
+      const btn = document.getElementById('searchBtn');
+      btn.disabled = true;
+      let remaining = seconds;
+      
+      const interval = setInterval(() => {
+        btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Wait ${remaining}s...`;
+        remaining--;
+        if (remaining < 0) {
+          clearInterval(interval);
+          btn.disabled = false;
+          btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Fetch Details`;
+        }
+      }, 1000);
+    }
+
+    // Main API Fetch Logic with Proxy & LocalStorage Caching
+    async function fetchVehicleData() {
+      const vehicleNo = document.getElementById('vehicleInput').value.trim();
+      if (!vehicleNo) {
+        showToast('Please enter a valid vehicle number!');
+        return;
+      }
+
+      startCooldownTimer(7);
+
+      // Check LocalStorage Cache (24 hours expiry)
+      const cached = localStorage.getItem(`vehicle_${vehicleNo}`);
+      if (cached) {
+        const cacheData = JSON.parse(cached);
+        if (Date.now() - cacheData.timestamp < 24 * 60 * 60 * 1000) {
+          renderData(cacheData.data);
+          showToast('Loaded from cache!');
+          return;
+        }
+      }
+
+      let data = null;
+      try {
+        // Primary Gateway (Flask Backend Proxy)
+        const res = await fetch(`/api/vehicle/${vehicleNo}`);
+        if (res.ok) {
+          data = await res.json();
+        } else {
+          throw new Error('Flask Backend proxy failed');
+        }
+      } catch (err) {
+        console.warn('Backend proxy failed, attempting client-side fallback proxy...', err);
+        try {
+          // Client Fallback CORS Proxy
+          const fallbackUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(`https://cjpindia.vercel.app/api/vehicle-details/${vehicleNo}`)}`;
+          const fallbackRes = await fetch(fallbackUrl);
+          if (fallbackRes.ok) {
+            data = await fallbackRes.json();
+          }
+        } catch (fallbackErr) {
+          console.error('All proxies failed:', fallbackErr);
+        }
+      }
+
+      if (data && (data.registrationResult || data.status === 'SUCCESS')) {
+        // Save to Cache
+        localStorage.setItem(`vehicle_${vehicleNo}`, JSON.stringify({
+          timestamp: Date.now(),
+          data: data
+        }));
+        renderData(data);
+      } else {
+        showToast('Failed to fetch vehicle details. Try again!');
+      }
+    }
+
+    // Render Data into UI Components
+    function renderData(data) {
+      const reg = data.registrationResult || {};
+      const prem = (data.premiumRequest && data.premiumRequest.motorPremiumRequest) || {};
+
+      document.getElementById('resultWrapper').style.display = 'block';
+
+      // Hero Section
+      document.getElementById('plateNo').innerText = reg.registrationNo || 'MH47BM9865';
+      const makeModel = `${reg.make || ''} ${reg.model || ''}`.trim() || 'Vehicle Details';
+      document.getElementById('vehicleModelTitle').innerText = makeModel;
+
+      // Icon Switch
+      const iconElem = document.getElementById('vehicleTypeIcon');
+      if ((reg.vertical && reg.vertical === 'TW') || reg.seatingCapacity <= 2) {
+        iconElem.className = 'fa-solid fa-motorcycle vehicle-svg-glow';
+      } else {
+        iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow';
+      }
+
+      // Fuel & Norms
+      const fuel = reg.fuel || 'Petrol';
+      const fuelBadge = document.getElementById('fuelBadge');
+      fuelBadge.innerHTML = `<i class="fa-solid fa-gas-pump"></i> ${fuel}`;
+      if (fuel.toLowerCase().includes('diesel') || fuel.toLowerCase().includes('ev')) {
+        fuelBadge.classList.add('diesel-ev');
+      } else {
+        fuelBadge.classList.remove('diesel-ev');
+      }
+
+      document.getElementById('normBadge').innerHTML = `<i class="fa-solid fa-leaf"></i> ${prem.variant || 'BS-VI / Standard'}`;
+
+      // Owner & Address
+      const ownerName = `${reg.ownerFirstName || ''} ${reg.ownerLastName || ''}`.trim() || 'Record Registered';
+      document.getElementById('ownerName').innerText = ownerName;
+      document.getElementById('corrAddress').innerText = reg.corrAddress || 'N/A';
+      document.getElementById('permAddress').innerText = reg.permanentAddress || 'N/A';
+
+      // RTO & Dates
+      const rtoLoc = (reg.rto && reg.rto.lntLoc) ? reg.rto.lntLoc : 'RTO Office';
+      const rtoCode = (reg.rto && reg.rto.rtoCode) ? reg.rto.rtoCode : '';
+      document.getElementById('rtoDetails').innerText = `${rtoLoc} (${rtoCode})`;
+      document.getElementById('stateCode').innerText = prem.stateCode || reg.reg1 || 'MH';
+
+      const regDate = reg.registrationDate || 'N/A';
+      document.getElementById('regDate').innerText = regDate;
+
+      // RC Fitness (+15 Years Inferred)
+      if (regDate !== 'N/A' && regDate.includes('/')) {
+        const parts = regDate.split('/');
+        const year = parseInt(parts[2]) + 15;
+        document.getElementById('fitnessDate').innerText = `${parts[0]}/${parts[1]}/${year}`;
+      } else {
+        document.getElementById('fitnessDate').innerText = '15 Years From Registration';
+      }
+
+      // PUC & Dynamic Progress Bar
+      const pucDateStr = reg.pucValidDate || '';
+      document.getElementById('pucNo').innerText = reg.pucNo || 'N/A';
+      document.getElementById('pucValidDate').innerText = pucDateStr || 'N/A';
+
+      if (pucDateStr) {
+        const pucExpiry = new Date(pucDateStr);
+        const today = new Date();
+        const diffDays = Math.ceil((pucExpiry - today) / (1000 * 60 * 60 * 24));
+        const progressBar = document.getElementById('pucProgressBar');
+
+        if (diffDays > 30) {
+          progressBar.style.width = '100%';
+          progressBar.style.background = 'var(--emerald-green)';
+        } else if (diffDays > 0 && diffDays <= 30) {
+          progressBar.style.width = '50%';
+          progressBar.style.background = 'var(--gold-main)';
+        } else {
+          progressBar.style.width = '100%';
+          progressBar.style.background = 'var(--alert-red)';
+        }
+      }
+
+      // Tech Specs
+      document.getElementById('chassisNo').innerText = reg.chasisno || 'N/A';
+      document.getElementById('engineNo').innerText = reg.engineno || 'N/A';
+      document.getElementById('techSpecsMisc').innerText = `${reg.cubicCapacity || '110'} CC | Year: ${reg.year || '2023'}`;
+
+      // Finance Status
+      const financier = reg.financierName || '';
+      const financeBadge = document.getElementById('financeBadge');
+      if (financier && financier.trim() !== '') {
+        financeBadge.className = 'finance-badge financed';
+        financeBadge.innerHTML = `<i class="fa-solid fa-shield-halved"></i> FINANCED`;
+        document.getElementById('financierName').innerText = financier;
+      } else {
+        financeBadge.className = 'finance-badge cash';
+        financeBadge.innerHTML = `<i class="fa-solid fa-shield-halved"></i> ON CASH`;
+        document.getElementById('financierName').innerText = 'No Active Hypothecation';
+      }
+
+      // Insurance
+      document.getElementById('policyNo').innerText = reg.prePolicyNo || prem.previousPolicyNumber || 'N/A';
+
+      notifyParentIframe();
+    }
+
+    // Toggle Finance Accordion
+    function toggleFinanceAccordion() {
+      const content = document.getElementById('financeAccordion');
+      content.classList.toggle('expanded');
+      notifyParentIframe();
+    }
+
+    // Copy to Clipboard
+    function copyToClipboard(elemId) {
+      const text = document.getElementById(elemId).innerText;
+      if (text && text !== '--' && text !== 'N/A') {
+        navigator.clipboard.writeText(text);
+        showToast(`Copied: ${text}`);
+      }
+    }
+
+    // Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // iFrame Dynamic Height Resizing
+    function notifyParentIframe() {
+      setTimeout(() => {
+        if (window.parent) {
+          window.parent.postMessage({
+            type: 'resize',
+            height: document.body.scrollHeight
+          }, '*');
+        }
+      }, 300);
+    }
+
+    window.addEventListener('resize', notifyParentIframe);
+  </script>
+</body>
+</html>
