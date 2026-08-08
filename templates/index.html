@@ -29,6 +29,7 @@
       --emerald-green: #10b981;
       --alert-red: #ef4444;
       --orange-fire: #f97316;
+      --vibrant-green: #00ff88;
     }
 
     * {
@@ -442,6 +443,71 @@
       justify-content: space-between;
     }
 
+    /* REDESIGNED OWNER INFO STYLES (CHANGE 2) */
+    .owner-display-box {
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.25);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+
+    .owner-avatar-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(2, 132, 199, 0.35));
+      border: 1px solid var(--cyan-light);
+      color: var(--cyan-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      box-shadow: 0 0 12px rgba(6, 182, 212, 0.25);
+      flex-shrink: 0;
+    }
+
+    .owner-info-text {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow: hidden;
+    }
+
+    .owner-name-text {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      word-break: break-word;
+    }
+
+    .owner-verified-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--emerald-green);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* DYNAMIC GREEN INSURANCE BADGE (CHANGE 3) */
+    .insurance-valid-badge {
+      color: var(--vibrant-green) !important;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);
+    }
+
     .insurance-centered {
       display: flex;
       flex-direction: column;
@@ -623,19 +689,25 @@
       <!-- MODULAR GRID SYSTEM -->
       <div class="grid-container">
 
-        <!-- 1. OWNER INFO CARD -->
+        <!-- 1. OWNER INFO CARD (REDESIGNED - CHANGE 2) -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-user-shield"></i></div>
             <div class="card-title">Owner Information</div>
           </div>
-          <div class="field-group">
-            <div class="field-label">Owner Name</div>
-            <div id="ownerName" class="field-value">--</div>
-          </div>
-          <div class="field-group">
-            <div class="field-label">Ownership Serial</div>
-            <div id="ownerSerial" class="field-value">1st Owner / Active</div>
+          <div class="field-group" style="margin-bottom: 0;">
+            <div class="field-label">Registered Owner</div>
+            <div class="owner-display-box">
+              <div class="owner-avatar-icon">
+                <i class="fa-solid fa-user-check"></i>
+              </div>
+              <div class="owner-info-text">
+                <div id="ownerName" class="owner-name-text">--</div>
+                <div class="owner-verified-badge">
+                  <i class="fa-solid fa-circle-check"></i> Verified Owner Record
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -790,7 +862,7 @@
           </div>
         </div>
 
-        <!-- 10. INSURANCE DETAILS CARD -->
+        <!-- 10. INSURANCE DETAILS CARD (DYNAMIC VIBRANT GREEN VALIDITY - CHANGE 3) -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
@@ -802,8 +874,8 @@
               <div id="policyNo" class="field-value">--</div>
             </div>
             <div class="field-group" id="insuranceStatusGroup" style="display: none;">
-              <div class="field-label">Insurance Status / Validity</div>
-              <div id="insuranceStatusValue" class="field-value" style="color: var(--emerald-green);">ACTIVE</div>
+              <div class="field-label">Insurance Validity</div>
+              <div id="insuranceStatusValue" class="field-value">--</div>
             </div>
           </div>
         </div>
@@ -847,46 +919,40 @@
       }, 1000);
     }
 
-    /* ACCURATE 15-YEAR FITNESS DATE CALCULATION LOGIC */
-    function calculate15YearsFitness(regDateStr) {
-      if (!regDateStr || regDateStr === 'N/A') return null;
+    /* ACCURATE DATE PARSER HELPER */
+    function parseCustomDate(dateStr) {
+      if (!dateStr || dateStr === 'N/A' || dateStr === 'null') return null;
 
-      let day, month, year;
-      let parsedDate = null;
-
-      // Handle DD/MM/YYYY or DD-MM-YYYY format
-      const ddmmyyyyMatch = regDateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-      // Handle DD-MMM-YYYY format (e.g. 04-Jul-2018)
-      const ddMmmYyyyMatch = regDateStr.match(/^(\d{1,2})[\/\-]([A-Za-z]{3})[\/\-](\d{4})$/);
+      const ddmmyyyyMatch = dateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      const ddMmmYyyyMatch = dateStr.match(/^(\d{1,2})[\/\-]([A-Za-z]{3})[\/\-](\d{4})$/);
 
       if (ddmmyyyyMatch) {
-        day = parseInt(ddmmyyyyMatch[1], 10);
-        month = parseInt(ddmmyyyyMatch[2], 10) - 1; // Months 0-11
-        year = parseInt(ddmmyyyyMatch[3], 10);
-        parsedDate = new Date(year, month, day);
+        return new Date(parseInt(ddmmyyyyMatch[3], 10), parseInt(ddmmyyyyMatch[2], 10) - 1, parseInt(ddmmyyyyMatch[1], 10));
       } else if (ddMmmYyyyMatch) {
-        day = parseInt(ddMmmYyyyMatch[1], 10);
         const monthStr = ddMmmYyyyMatch[2].toLowerCase();
         const monthsMap = {'jan':0, 'feb':1, 'mar':2, 'apr':3, 'may':4, 'jun':5, 'jul':6, 'aug':7, 'sep':8, 'oct':9, 'nov':10, 'dec':11};
-        month = monthsMap[monthStr];
-        year = parseInt(ddMmmYyyyMatch[3], 10);
+        const month = monthsMap[monthStr];
         if (month !== undefined) {
-          parsedDate = new Date(year, month, day);
+          return new Date(parseInt(ddMmmYyyyMatch[3], 10), month, parseInt(ddMmmYyyyMatch[1], 10));
         }
-      } else {
-        parsedDate = new Date(regDateStr);
       }
+      
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    }
 
-      if (!parsedDate || isNaN(parsedDate.getTime())) return null;
+    /* ACCURATE 15-YEAR FITNESS DATE CALCULATION LOGIC */
+    function calculate15YearsFitness(regDateStr) {
+      const parsedDate = parseCustomDate(regDateStr);
+      if (!parsedDate) return null;
 
-      // Add 15 Years and subtract 1 day
       const expDate = new Date(parsedDate.getFullYear() + 15, parsedDate.getMonth(), parsedDate.getDate() - 1);
 
       const expDay = String(expDate.getDate()).padStart(2, '0');
       const expMonth = String(expDate.getMonth() + 1).padStart(2, '0');
       const expYear = expDate.getFullYear();
 
-      // Return exact formatted output matching input format style (DD/MM/YYYY or DD-MMM-YYYY)
+      const ddMmmYyyyMatch = regDateStr.match(/^(\d{1,2})[\/\-]([A-Za-z]{3})[\/\-](\d{4})$/);
       if (ddMmmYyyyMatch) {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         return `${expDay}-${monthNames[expDate.getMonth()]}-${expYear}`;
@@ -969,26 +1035,41 @@
       const makeModel = `${reg.make || ''} ${reg.model || ''}`.trim() || 'Vehicle Details';
       document.getElementById('vehicleModelTitle').innerText = makeModel;
 
-      // Accurate Vehicle Icon matching
+      // CHANGE 1: DEEP SCAN VEHICLE ICON IDENTIFICATION LOGIC
       const iconElem = document.getElementById('vehicleTypeIcon');
       const bodyType = (reg.bodyType || '').toUpperCase();
       const modelName = (reg.model || '').toUpperCase();
       const makeName = (reg.make || '').toUpperCase();
+      const vehicleClass = (reg.vehicleClass || reg.vchCatg || reg.vehicleCategory || reg.vehicle_category || reg.class || '').toUpperCase();
       const vertical = (reg.vertical || prem.vertical || '').toUpperCase();
+      const wheelCount = parseInt(reg.wheelCount || reg.wheel_count || reg.noOfWheels || 0);
       const seating = parseInt(reg.seatingCapacity) || 0;
 
+      // 3-Wheeler Check
       const is3Wheeler = bodyType.includes('3W') || bodyType.includes('THREE') || bodyType.includes('AUTO') || 
                          bodyType.includes('RICKSHAW') || modelName.includes('APE') || modelName.includes('RKS') || 
-                         makeName.includes('PIAGGIO') || modelName.includes('3-WHEELER');
+                         makeName.includes('PIAGGIO') || modelName.includes('3-WHEELER') || wheelCount === 3;
 
-      const is2Wheeler = vertical === 'TW' || seating <= 2 || bodyType.includes('TWO') || bodyType.includes('SCOOTER') || bodyType.includes('MOTORCYCLE') || bodyType.includes('M-CYCLE');
-      const isCommercial = vertical === 'CV' || bodyType.includes('TRUCK') || bodyType.includes('BUS') || bodyType.includes('GOODS') || bodyType.includes('TAXI') || bodyType.includes('COMMERCIAL') || is3Wheeler;
+      // Heavy / Commercial Truck Check
+      const isTruckOrCV = vertical === 'CV' || vehicleClass.includes('GOODS') || vehicleClass.includes('TRUCK') || 
+                          vehicleClass.includes('COMMERCIAL') || bodyType.includes('TRUCK') || bodyType.includes('CONTAINER') ||
+                          bodyType.includes('OPEN BODY') || bodyType.includes('FABRICATED') || bodyType.includes('GOODS') || 
+                          modelName.includes('ACE') || modelName.includes('PICKUP') || modelName.includes('DOST') || modelName.includes('CANTER');
 
+      // 2-Wheeler Check (Must not have commercial/truck keywords)
+      const is2Wheeler = !is3Wheeler && !isTruckOrCV && (
+        vertical === 'TW' || 
+        wheelCount === 2 ||
+        vehicleClass.includes('TWO WHEELER') || vehicleClass.includes('2W') || vehicleClass.includes('MOTORCYCLE') || vehicleClass.includes('SCOOTER') || vehicleClass.includes('M-CYCLE') ||
+        bodyType.includes('TWO WHEELER') || bodyType.includes('SCOOTER') || bodyType.includes('MOTORCYCLE')
+      );
+
+      // Icon Assignment
       if (is3Wheeler) {
         iconElem.className = 'fa-solid fa-taxi vehicle-svg-glow';
       } else if (is2Wheeler) {
         iconElem.className = 'fa-solid fa-motorcycle vehicle-svg-glow';
-      } else if (isCommercial) {
+      } else if (isTruckOrCV) {
         iconElem.className = 'fa-solid fa-truck-front vehicle-svg-glow';
       } else {
         iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow';
@@ -1022,7 +1103,7 @@
 
       document.getElementById('normBadge').innerHTML = `<i class="fa-solid fa-leaf"></i> ${normDisplayText}`;
 
-      // 1. Owner Information
+      // CHANGE 2: REDESIGNED OWNER INFORMATION (Ownership serial removed)
       const ownerName = `${reg.ownerFirstName || ''} ${reg.ownerLastName || ''}`.trim() || 'Record Registered';
       document.getElementById('ownerName').innerText = ownerName;
 
@@ -1040,7 +1121,7 @@
         variantGroup.style.display = 'none';
       }
 
-      // 3. NEW BOX: BODY TYPE & SEATING CAPACITY
+      // 3. BODY TYPE & SEATING CAPACITY
       document.getElementById('cardBodyType').innerText = reg.bodyType || 'N/A';
       document.getElementById('cardSeatingCapacity').innerText = reg.seatingCapacity ? `${reg.seatingCapacity} Seats` : 'N/A';
 
@@ -1054,14 +1135,14 @@
       document.getElementById('rtoDetails').innerText = `${rtoLoc} (${rtoCode})`;
       document.getElementById('stateCode').innerText = prem.stateCode || reg.reg1 || 'MH';
 
-      // 6. Important Dates (WITH ACCURATE 15-YEAR CALCULATION LOGIC)
+      // 6. Important Dates (15-YEAR ACCURATE CALCULATION)
       const regDateStr = reg.registrationDate || 'N/A';
       document.getElementById('regDate').innerText = regDateStr;
 
       let fitnessVal = reg.fitnessValidUpto || reg.fitValidUpto || reg.fitnessUpto || null;
       const fitnessGroup = document.getElementById('fitnessDateGroup');
 
-      const isPrivate2W4W = !isCommercial && (is2Wheeler || vertical === 'PV' || vertical === '4W' || bodyType.includes('CAR') || bodyType.includes('SEDAN') || bodyType.includes('HATCHBACK') || bodyType.includes('SUV'));
+      const isPrivate2W4W = !isTruckOrCV && !is3Wheeler && (is2Wheeler || vertical === 'PV' || vertical === '4W' || bodyType.includes('CAR') || bodyType.includes('SEDAN') || bodyType.includes('HATCHBACK') || bodyType.includes('SUV'));
 
       if (isPrivate2W4W && regDateStr && regDateStr !== 'N/A') {
         const calculatedFitness = calculate15YearsFitness(regDateStr);
@@ -1083,20 +1164,22 @@
       document.getElementById('pucValidDate').innerText = pucDateStr || 'N/A';
 
       if (pucDateStr) {
-        const pucExpiry = new Date(pucDateStr);
-        const today = new Date();
-        const diffDays = Math.ceil((pucExpiry - today) / (1000 * 60 * 60 * 24));
-        const progressBar = document.getElementById('pucProgressBar');
+        const pucExpiry = parseCustomDate(pucDateStr);
+        if (pucExpiry) {
+          const today = new Date();
+          const diffDays = Math.ceil((pucExpiry - today) / (1000 * 60 * 60 * 24));
+          const progressBar = document.getElementById('pucProgressBar');
 
-        if (diffDays > 30) {
-          progressBar.style.width = '100%';
-          progressBar.style.background = 'var(--emerald-green)';
-        } else if (diffDays > 0 && diffDays <= 30) {
-          progressBar.style.width = '50%';
-          progressBar.style.background = 'var(--gold-main)';
-        } else {
-          progressBar.style.width = '100%';
-          progressBar.style.background = 'var(--alert-red)';
+          if (diffDays > 30) {
+            progressBar.style.width = '100%';
+            progressBar.style.background = 'var(--emerald-green)';
+          } else if (diffDays > 0 && diffDays <= 30) {
+            progressBar.style.width = '50%';
+            progressBar.style.background = 'var(--gold-main)';
+          } else {
+            progressBar.style.width = '100%';
+            progressBar.style.background = 'var(--alert-red)';
+          }
         }
       }
 
@@ -1105,7 +1188,7 @@
       document.getElementById('engineNo').innerText = reg.engineno || 'N/A';
       document.getElementById('techSpecsMisc').innerText = `${reg.cubicCapacity || '110'} CC | Year: ${reg.year || '2023'}`;
 
-      // 9. Financed Status (Direct View, No Accordion Toggle)
+      // 9. Financed Status
       const financier = reg.financierName || '';
       const financeBadge = document.getElementById('financeBadge');
       if (financier && financier.trim() !== '') {
@@ -1118,25 +1201,29 @@
         document.getElementById('financierName').innerText = 'No Active Hypothecation';
       }
 
-      // 10. Insurance Details
+      // CHANGE 3: DYNAMIC INSURANCE VALIDITY LOGIC & GREEN CSS
       document.getElementById('policyNo').innerText = reg.prePolicyNo || prem.previousPolicyNumber || 'N/A';
-      const insExpiryStr = reg.insuranceValidUpto || reg.insuranceUpto || prem.insuranceExpiryDate || null;
+      const insExpiryStr = reg.insuranceValidUpto || reg.insuranceUpto || reg.insurance_expiry_date || reg.valid_upto || prem.insuranceExpiryDate || null;
       const insStatusGroup = document.getElementById('insuranceStatusGroup');
       const insContainer = document.getElementById('insuranceContainer');
+      const insStatusValElem = document.getElementById('insuranceStatusValue');
 
-      let isActive = false;
+      let isValidInsurance = false;
       if (insExpiryStr) {
-        const insExpiryDate = new Date(insExpiryStr);
-        const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
+        const insExpiryDate = parseCustomDate(insExpiryStr);
+        if (insExpiryDate) {
+          const today = new Date();
+          today.setHours(0, 0, 0, 0); // Reset time to midnight for exact date comparison
 
-        if (insExpiryDate >= todayDate) {
-          isActive = true;
-          document.getElementById('insuranceStatusValue').innerText = `ACTIVE (${insExpiryStr})`;
+          if (insExpiryDate >= today) {
+            isValidInsurance = true;
+            insStatusValElem.className = 'field-value insurance-valid-badge';
+            insStatusValElem.innerHTML = `<i class="fa-solid fa-shield-check"></i> ${insExpiryStr} (ACTIVE)`;
+          }
         }
       }
 
-      if (isActive) {
+      if (isValidInsurance) {
         insStatusGroup.style.display = 'block';
         insContainer.className = '';
       } else {
