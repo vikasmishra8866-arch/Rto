@@ -65,7 +65,7 @@
       transition: all 0.5s ease-in-out;
     }
 
-    /* CHANGE 1: Initial Centered Search Layout */
+    /* Initial Centered Search Layout */
     .search-wrapper-center {
       min-height: 80vh;
       display: flex;
@@ -186,7 +186,7 @@
       cursor: not-allowed;
     }
 
-    /* CHANGE 3: WARNING & NOT FOUND CONTAINER */
+    /* WARNING & NOT FOUND CONTAINER */
     .not-found-card {
       background: var(--card-navy);
       border: 1px solid var(--alert-red);
@@ -290,10 +290,13 @@
       flex-wrap: wrap;
     }
 
+    /* MODIFICATION 2: Yellow Dark color for vehicle model title */
     .vehicle-title {
       font-size: 1.8rem;
       font-weight: 800;
-      color: #ffffff;
+      color: var(--gold-main);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .vehicle-svg-glow {
@@ -440,6 +443,21 @@
       justify-content: space-between;
     }
 
+    /* MODIFICATION 3: Center-aligned CSS helper for insurance box when alone */
+    .insurance-centered {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100%;
+      margin: auto 0;
+    }
+
+    .insurance-centered .field-value {
+      justify-content: center;
+    }
+
     .copy-btn {
       background: rgba(6, 182, 212, 0.15);
       border: none;
@@ -572,7 +590,7 @@
 
   <div class="container">
 
-    <!-- SEARCH WRAPPER (Initially Center, then Top) -->
+    <!-- SEARCH WRAPPER -->
     <div id="searchWrapper" class="search-wrapper-center">
       <div class="search-card">
         <div class="search-title">
@@ -581,7 +599,6 @@
         <div class="search-box">
           <div class="search-input-wrapper">
             <i class="fa-solid fa-car"></i>
-            <!-- CHANGE 2: Lock Spaces & Lock Small Letters in real-time -->
             <input type="text" id="vehicleInput" class="search-input" placeholder="Enter Reg No. (e.g. MH47BM9865)" oninput="sanitizeInput(this)" onkeydown="handleKeyPress(event)">
           </div>
           <button id="searchBtn" class="btn-search" onclick="fetchVehicleData()">
@@ -591,7 +608,7 @@
       </div>
     </div>
 
-    <!-- CHANGE 3: NOT FOUND / WARNING CONTAINER -->
+    <!-- NOT FOUND / WARNING CONTAINER -->
     <div id="notFoundWrapper" style="display: none;">
       <div class="not-found-card">
         <i class="fa-solid fa-triangle-exclamation not-found-icon"></i>
@@ -612,7 +629,6 @@
 
         <div class="hero-details">
           <div class="hero-title-group">
-            <!-- CHANGE 5: Accurate dynamic vehicle icon -->
             <i id="vehicleTypeIcon" class="fa-solid fa-motorcycle vehicle-svg-glow"></i>
             <div id="vehicleModelTitle" class="vehicle-title">Honda Activa</div>
           </div>
@@ -642,7 +658,7 @@
           </div>
         </div>
 
-        <!-- CHANGE 4: NEW VEHICLE BRAND & MODEL SPECIFICATIONS CARD -->
+        <!-- VEHICLE BRAND & MODEL SPECIFICATIONS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-industry"></i></div>
@@ -656,13 +672,14 @@
             <div class="field-label">Vehicle Model</div>
             <div id="cardModel" class="field-value">--</div>
           </div>
-          <div class="field-group">
+          <!-- MODIFICATION 3: Variant hideable group -->
+          <div class="field-group" id="variantGroup" style="display: none;">
             <div class="field-label">Variant</div>
             <div id="cardVariant" class="field-value">--</div>
           </div>
         </div>
 
-        <!-- 2. FULL ADDRESS DETAILS CARD (BOTH STACKED) -->
+        <!-- 2. FULL ADDRESS DETAILS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
@@ -704,7 +721,6 @@
             <div class="field-label">Registration Date</div>
             <div id="regDate" class="field-value">--</div>
           </div>
-          <!-- CHANGE 6: Exact JSON Fitness Date without 15 Year logic & Hideable -->
           <div class="field-group" id="fitnessDateGroup" style="display: none;">
             <div class="field-label">RC Fitness / Expiry Date</div>
             <div id="fitnessDate" class="field-value">--</div>
@@ -715,7 +731,7 @@
           </div>
         </div>
 
-        <!-- 5. PUC DETAILS CARD (VISUAL PROGRESS BAR) -->
+        <!-- 5. PUC DETAILS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-cloud-sun"></i></div>
@@ -780,19 +796,21 @@
         </div>
 
         <!-- 8. INSURANCE DETAILS CARD -->
-        <!-- CHANGE 6 (Part 2): Conditional Active Status / Date hiding -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
             <div class="card-title">Insurance Details</div>
           </div>
-          <div class="field-group">
-            <div class="field-label">Previous Policy Number</div>
-            <div id="policyNo" class="field-value">--</div>
-          </div>
-          <div class="field-group" id="insuranceStatusGroup" style="display: none;">
-            <div class="field-label">Insurance Status / Validity</div>
-            <div id="insuranceStatusValue" class="field-value" style="color: var(--emerald-green);">ACTIVE</div>
+          <!-- MODIFICATION 3: Container wrapper for centering Policy Number when alone -->
+          <div id="insuranceContainer">
+            <div class="field-group">
+              <div class="field-label">Previous Policy Number</div>
+              <div id="policyNo" class="field-value">--</div>
+            </div>
+            <div class="field-group" id="insuranceStatusGroup" style="display: none;">
+              <div class="field-label">Insurance Status / Validity</div>
+              <div id="insuranceStatusValue" class="field-value" style="color: var(--emerald-green);">ACTIVE</div>
+            </div>
           </div>
         </div>
 
@@ -808,12 +826,10 @@
   </div>
 
   <script>
-    // CHANGE 2: Sanitization & Capitalization Lock (No spaces, uppercase only)
     function sanitizeInput(input) {
       input.value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
     }
 
-    // CHANGE 2: Enter Key Trigger Support
     function handleKeyPress(event) {
       if (event.key === 'Enter') {
         event.preventDefault();
@@ -821,7 +837,6 @@
       }
     }
 
-    // Interactive Cooldown Timer
     function startCooldownTimer(seconds) {
       const btn = document.getElementById('searchBtn');
       btn.disabled = true;
@@ -838,7 +853,6 @@
       }, 1000);
     }
 
-    // Main API Fetch Logic
     async function fetchVehicleData() {
       const vehicleNo = document.getElementById('vehicleInput').value.trim();
       if (!vehicleNo) {
@@ -848,19 +862,16 @@
 
       startCooldownTimer(7);
 
-      // CHANGE 1: Shift Search Box to top
       const wrapper = document.getElementById('searchWrapper');
       wrapper.className = 'search-wrapper-top';
 
       document.getElementById('resultWrapper').style.display = 'none';
       document.getElementById('notFoundWrapper').style.display = 'none';
 
-      // Check LocalStorage Cache (24 hours expiry)
       const cached = localStorage.getItem(`vehicle_${vehicleNo}`);
       if (cached) {
         const cacheData = JSON.parse(cached);
         if (Date.now() - cacheData.timestamp < 24 * 60 * 60 * 1000) {
-          // CHANGE 3: Artificial 1.5s delay to prevent API overloading and smooth transition
           await new Promise(r => setTimeout(r, 1500));
           renderData(cacheData.data);
           showToast('Loaded from cache!');
@@ -870,7 +881,6 @@
 
       let data = null;
       try {
-        // CHANGE 3: Enforce 1.5s minimum wait time before displaying results
         const [res] = await Promise.all([
           fetch(`/api/vehicle/${vehicleNo}`),
           new Promise(r => setTimeout(r, 1500))
@@ -901,13 +911,11 @@
         }));
         renderData(data);
       } else {
-        // CHANGE 3: Display Warning Not Found
         document.getElementById('notFoundWrapper').style.display = 'block';
         notifyParentIframe();
       }
     }
 
-    // Render Data into UI Components
     function renderData(data) {
       const reg = data.registrationResult || {};
       const prem = (data.premiumRequest && data.premiumRequest.motorPremiumRequest) || {};
@@ -920,20 +928,26 @@
       const makeModel = `${reg.make || ''} ${reg.model || ''}`.trim() || 'Vehicle Details';
       document.getElementById('vehicleModelTitle').innerText = makeModel;
 
-      // CHANGE 5: Fixed Vehicle Silhouette Identification (Car / 3-Wheeler / 2-Wheeler / Commercial)
+      // MODIFICATION 1: Accurate Vehicle Icon matching (Including Piaggio Ape, Auto, Rickshaw, 3-Wheelers)
       const iconElem = document.getElementById('vehicleTypeIcon');
       const bodyType = (reg.bodyType || '').toUpperCase();
+      const modelName = (reg.model || '').toUpperCase();
+      const makeName = (reg.make || '').toUpperCase();
       const vertical = (reg.vertical || prem.vertical || '').toUpperCase();
       const seating = parseInt(reg.seatingCapacity) || 0;
 
-      if (bodyType.includes('3W') || bodyType.includes('THREE') || bodyType.includes('AUTO') || bodyType.includes('RICKSHAW')) {
-        iconElem.className = 'fa-solid fa-taxi vehicle-svg-glow'; // 3-Wheeler representation
+      const is3Wheeler = bodyType.includes('3W') || bodyType.includes('THREE') || bodyType.includes('AUTO') || 
+                         bodyType.includes('RICKSHAW') || modelName.includes('APE') || modelName.includes('RKS') || 
+                         makeName.includes('PIAGGIO') || modelName.includes('3-WHEELER');
+
+      if (is3Wheeler) {
+        iconElem.className = 'fa-solid fa-taxi vehicle-svg-glow'; // 3-Wheeler Auto/Tempo Icon
       } else if (vertical === 'TW' || seating <= 2 || bodyType.includes('TWO') || bodyType.includes('SCOOTER') || bodyType.includes('MOTORCYCLE')) {
         iconElem.className = 'fa-solid fa-motorcycle vehicle-svg-glow'; // 2-Wheeler
       } else if (vertical === 'CV' || bodyType.includes('TRUCK') || bodyType.includes('BUS') || bodyType.includes('GOODS')) {
-        iconElem.className = 'fa-solid fa-truck-front vehicle-svg-glow'; // Commercial Vehicle
+        iconElem.className = 'fa-solid fa-truck-front vehicle-svg-glow'; // Commercial Truck
       } else {
-        iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow'; // Standard 4-Wheeler / Car
+        iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow'; // Car / 4-Wheeler
       }
 
       // Fuel & Norms
@@ -952,10 +966,19 @@
       const ownerName = `${reg.ownerFirstName || ''} ${reg.ownerLastName || ''}`.trim() || 'Record Registered';
       document.getElementById('ownerName').innerText = ownerName;
 
-      // CHANGE 4: Populate New Brand / Model / Variant Card
+      // Brand & Model
       document.getElementById('cardMake').innerText = reg.make || prem.make || 'N/A';
       document.getElementById('cardModel').innerText = reg.model || prem.model || 'N/A';
-      document.getElementById('cardVariant').innerText = reg.displayVariant || prem.variant || 'N/A';
+
+      // MODIFICATION 3: Variant visibility check (completely hide if null/NA/missing)
+      const variantVal = prem.variant || reg.displayVariant || null;
+      const variantGroup = document.getElementById('variantGroup');
+      if (variantVal && variantVal !== 'N/A' && variantVal !== 'null' && variantVal.trim() !== '') {
+        document.getElementById('cardVariant').innerText = variantVal;
+        variantGroup.style.display = 'block';
+      } else {
+        variantGroup.style.display = 'none';
+      }
 
       // Address Details
       document.getElementById('corrAddress').innerText = reg.corrAddress || 'N/A';
@@ -969,7 +992,7 @@
 
       document.getElementById('regDate').innerText = reg.registrationDate || 'N/A';
 
-      // CHANGE 6: Exact JSON Fitness Date (No 15-year logic), completely hide if missing/null
+      // Fitness Date
       const fitnessVal = reg.fitnessValidUpto || reg.fitValidUpto || reg.fitnessUpto || null;
       const fitnessGroup = document.getElementById('fitnessDateGroup');
       if (fitnessVal && fitnessVal !== 'null' && fitnessVal !== 'N/A') {
@@ -1020,37 +1043,41 @@
         document.getElementById('financierName').innerText = 'No Active Hypothecation';
       }
 
-      // CHANGE 6 (Part 2): Insurance - Only show Active status/date if validity is Today or Future
+      // MODIFICATION 3: Insurance Box Centering & Active Status Logic
       document.getElementById('policyNo').innerText = reg.prePolicyNo || prem.previousPolicyNumber || 'N/A';
       const insExpiryStr = reg.insuranceValidUpto || reg.insuranceUpto || prem.insuranceExpiryDate || null;
       const insStatusGroup = document.getElementById('insuranceStatusGroup');
+      const insContainer = document.getElementById('insuranceContainer');
 
+      let isActive = false;
       if (insExpiryStr) {
         const insExpiryDate = new Date(insExpiryStr);
         const todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
 
         if (insExpiryDate >= todayDate) {
+          isActive = true;
           document.getElementById('insuranceStatusValue').innerText = `ACTIVE (${insExpiryStr})`;
-          insStatusGroup.style.display = 'block';
-        } else {
-          insStatusGroup.style.display = 'none';
         }
+      }
+
+      if (isActive) {
+        insStatusGroup.style.display = 'block';
+        insContainer.className = ''; // Standard top-to-bottom layout
       } else {
         insStatusGroup.style.display = 'none';
+        insContainer.className = 'insurance-centered'; // Perfectly center aligned when policy number is alone
       }
 
       notifyParentIframe();
     }
 
-    // Toggle Finance Accordion
     function toggleFinanceAccordion() {
       const content = document.getElementById('financeAccordion');
       content.classList.toggle('expanded');
       notifyParentIframe();
     }
 
-    // Copy to Clipboard
     function copyToClipboard(elemId) {
       const text = document.getElementById(elemId).innerText;
       if (text && text !== '--' && text !== 'N/A') {
@@ -1059,7 +1086,6 @@
       }
     }
 
-    // Toast Notification
     function showToast(msg) {
       const toast = document.getElementById('toast');
       document.getElementById('toastMsg').innerText = msg;
@@ -1069,7 +1095,6 @@
       }, 3000);
     }
 
-    // iFrame Dynamic Height Resizing
     function notifyParentIframe() {
       setTimeout(() => {
         if (window.parent) {
