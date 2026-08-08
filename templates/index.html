@@ -351,7 +351,7 @@
     }
 
     /* ==========================================================================
-       MODULAR GRID SYSTEM (3x6 GRID)
+       MODULAR GRID SYSTEM
        ========================================================================== */
     .grid-container {
       display: grid;
@@ -489,11 +489,7 @@
       transition: width 0.6s ease;
     }
 
-    /* INTERACTIVE FINANCED ACCORDION */
-    .financed-card {
-      cursor: pointer;
-    }
-
+    /* DIRECT FINANCED STATUS BADGE */
     .finance-badge {
       padding: 6px 14px;
       border-radius: 20px;
@@ -515,19 +511,6 @@
       background: rgba(148, 163, 184, 0.15);
       border: 1px solid var(--text-slate);
       color: var(--text-slate);
-    }
-
-    .accordion-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease, margin-top 0.4s ease;
-    }
-
-    .accordion-content.expanded {
-      max-height: 200px;
-      margin-top: 14px;
-      padding-top: 10px;
-      border-top: 1px dashed rgba(255, 255, 255, 0.1);
     }
 
     /* TOAST NOTIFICATION */
@@ -637,7 +620,7 @@
         </div>
       </div>
 
-      <!-- MODULAR GRID SYSTEM (3x6) -->
+      <!-- MODULAR GRID SYSTEM -->
       <div class="grid-container">
 
         <!-- 1. OWNER INFO CARD -->
@@ -656,7 +639,7 @@
           </div>
         </div>
 
-        <!-- VEHICLE BRAND & MODEL SPECIFICATIONS CARD -->
+        <!-- 2. VEHICLE BRAND & MODEL SPECIFICATIONS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-industry"></i></div>
@@ -676,7 +659,23 @@
           </div>
         </div>
 
-        <!-- 2. FULL ADDRESS DETAILS CARD -->
+        <!-- 3. NEW BOX: VEHICLE CATEGORY & BODY (MODIFICATION 3) -->
+        <div class="data-card">
+          <div class="card-header">
+            <div class="card-icon"><i class="fa-solid fa-car-side"></i></div>
+            <div class="card-title">Vehicle Category & Body</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Body Type</div>
+            <div id="cardBodyType" class="field-value">--</div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Seating Capacity</div>
+            <div id="cardSeatingCapacity" class="field-value">--</div>
+          </div>
+        </div>
+
+        <!-- 4. FULL ADDRESS DETAILS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-location-dot"></i></div>
@@ -692,7 +691,7 @@
           </div>
         </div>
 
-        <!-- 3. REGISTRATION AUTHORITY CARD -->
+        <!-- 5. REGISTRATION AUTHORITY CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
@@ -708,7 +707,7 @@
           </div>
         </div>
 
-        <!-- 4. IMPORTANT DATES CARD (5th BOX WITH 15-YEAR FITNESS LOGIC) -->
+        <!-- 6. IMPORTANT DATES CARD (WITH ACCURATE 15-YEAR FITNESS FIX) -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div>
@@ -728,7 +727,7 @@
           </div>
         </div>
 
-        <!-- 5. PUC DETAILS CARD -->
+        <!-- 7. PUC DETAILS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-cloud-sun"></i></div>
@@ -747,7 +746,7 @@
           </div>
         </div>
 
-        <!-- 6. TECHNICAL SPECIFICATIONS CARD -->
+        <!-- 8. TECHNICAL SPECIFICATIONS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
@@ -773,26 +772,25 @@
           </div>
         </div>
 
-        <!-- 7. INTERACTIVE FINANCED STATUS CARD -->
-        <div class="data-card financed-card" onclick="toggleFinanceAccordion()">
+        <!-- 9. DIRECT FINANCED STATUS CARD (PERMANENT NO TOGGLE) -->
+        <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
             <div class="card-title">Financed Status</div>
           </div>
           <div class="field-group">
             <div class="field-label">Hypothecation Status</div>
-            <div class="field-value">
+            <div class="field-value" style="margin-bottom: 8px;">
               <span id="financeBadge" class="finance-badge cash"><i class="fa-solid fa-shield-halved"></i> ON CASH</span>
-              <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-slate);"></i>
             </div>
           </div>
-          <div id="financeAccordion" class="accordion-content">
+          <div class="field-group">
             <div class="field-label">Financier / Bank Name</div>
             <div id="financierName" class="field-value" style="font-size: 0.9rem;">No Active Hypothecation</div>
           </div>
         </div>
 
-        <!-- 8. INSURANCE DETAILS CARD -->
+        <!-- 10. INSURANCE DETAILS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
@@ -849,22 +847,51 @@
       }, 1000);
     }
 
-    /* HELPER: Calculate 15 Years Private Fitness Expiry Date */
+    /* ACCURATE 15-YEAR FITNESS DATE CALCULATION LOGIC */
     function calculate15YearsFitness(regDateStr) {
-      if (!regDateStr) return null;
-      const parsedDate = new Date(regDateStr);
-      if (isNaN(parsedDate.getTime())) return null;
+      if (!regDateStr || regDateStr === 'N/A') return null;
 
-      // Add 15 years and minus 1 day
-      parsedDate.setFullYear(parsedDate.getFullYear() + 15);
-      parsedDate.setDate(parsedDate.getDate() - 1);
+      let day, month, year;
+      let parsedDate = null;
 
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const day = String(parsedDate.getDate()).padStart(2, '0');
-      const month = months[parsedDate.getMonth()];
-      const year = parsedDate.getFullYear();
+      // Handle DD/MM/YYYY or DD-MM-YYYY format
+      const ddmmyyyyMatch = regDateStr.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      // Handle DD-MMM-YYYY format (e.g. 04-Jul-2018)
+      const ddMmmYyyyMatch = regDateStr.match(/^(\d{1,2})[\/\-]([A-Za-z]{3})[\/\-](\d{4})$/);
 
-      return `${day}-${month}-${year}`;
+      if (ddmmyyyyMatch) {
+        day = parseInt(ddmmyyyyMatch[1], 10);
+        month = parseInt(ddmmyyyyMatch[2], 10) - 1; // Months 0-11
+        year = parseInt(ddmmyyyyMatch[3], 10);
+        parsedDate = new Date(year, month, day);
+      } else if (ddMmmYyyyMatch) {
+        day = parseInt(ddMmmYyyyMatch[1], 10);
+        const monthStr = ddMmmYyyyMatch[2].toLowerCase();
+        const monthsMap = {'jan':0, 'feb':1, 'mar':2, 'apr':3, 'may':4, 'jun':5, 'jul':6, 'aug':7, 'sep':8, 'oct':9, 'nov':10, 'dec':11};
+        month = monthsMap[monthStr];
+        year = parseInt(ddMmmYyyyMatch[3], 10);
+        if (month !== undefined) {
+          parsedDate = new Date(year, month, day);
+        }
+      } else {
+        parsedDate = new Date(regDateStr);
+      }
+
+      if (!parsedDate || isNaN(parsedDate.getTime())) return null;
+
+      // Add 15 Years and subtract 1 day
+      const expDate = new Date(parsedDate.getFullYear() + 15, parsedDate.getMonth(), parsedDate.getDate() - 1);
+
+      const expDay = String(expDate.getDate()).padStart(2, '0');
+      const expMonth = String(expDate.getMonth() + 1).padStart(2, '0');
+      const expYear = expDate.getFullYear();
+
+      // Return exact formatted output matching input format style (DD/MM/YYYY or DD-MMM-YYYY)
+      if (ddMmmYyyyMatch) {
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${expDay}-${monthNames[expDate.getMonth()]}-${expYear}`;
+      }
+      return `${expDay}/${expMonth}/${expYear}`;
     }
 
     async function fetchVehicleData() {
@@ -983,7 +1010,7 @@
       const ownerName = `${reg.ownerFirstName || ''} ${reg.ownerLastName || ''}`.trim() || 'Record Registered';
       document.getElementById('ownerName').innerText = ownerName;
 
-      // Brand & Model
+      // 2. Brand & Model
       document.getElementById('cardMake').innerText = reg.make || prem.make || 'N/A';
       document.getElementById('cardModel').innerText = reg.model || prem.model || 'N/A';
 
@@ -997,20 +1024,24 @@
         variantGroup.style.display = 'none';
       }
 
-      // Address Details
+      // 3. NEW BOX: BODY TYPE & SEATING CAPACITY
+      document.getElementById('cardBodyType').innerText = reg.bodyType || 'N/A';
+      document.getElementById('cardSeatingCapacity').innerText = reg.seatingCapacity ? `${reg.seatingCapacity} Seats` : 'N/A';
+
+      // 4. Address Details
       document.getElementById('corrAddress').innerText = reg.corrAddress || 'N/A';
       document.getElementById('permAddress').innerText = reg.permanentAddress || 'N/A';
 
-      // RTO & Registration Date
+      // 5. RTO & Registration Authority
       const rtoLoc = (reg.rto && reg.rto.lntLoc) ? reg.rto.lntLoc : 'RTO Office';
       const rtoCode = (reg.rto && reg.rto.rtoCode) ? reg.rto.rtoCode : '';
       document.getElementById('rtoDetails').innerText = `${rtoLoc} (${rtoCode})`;
       document.getElementById('stateCode').innerText = prem.stateCode || reg.reg1 || 'MH';
 
+      // 6. Important Dates (WITH ACCURATE 15-YEAR CALCULATION LOGIC)
       const regDateStr = reg.registrationDate || 'N/A';
       document.getElementById('regDate').innerText = regDateStr;
 
-      // 15-YEAR PRIVATE FITNESS LOGIC FOR 2WL AND 4WL PRIVATE CARS
       let fitnessVal = reg.fitnessValidUpto || reg.fitValidUpto || reg.fitnessUpto || null;
       const fitnessGroup = document.getElementById('fitnessDateGroup');
 
@@ -1030,7 +1061,7 @@
         fitnessGroup.style.display = 'none';
       }
 
-      // PUC Details & Progress Bar
+      // 7. PUC Details & Progress Bar
       const pucDateStr = reg.pucValidDate || '';
       document.getElementById('pucNo').innerText = reg.pucNo || 'N/A';
       document.getElementById('pucValidDate').innerText = pucDateStr || 'N/A';
@@ -1053,12 +1084,12 @@
         }
       }
 
-      // Tech Specs
+      // 8. Tech Specs
       document.getElementById('chassisNo').innerText = reg.chasisno || 'N/A';
       document.getElementById('engineNo').innerText = reg.engineno || 'N/A';
       document.getElementById('techSpecsMisc').innerText = `${reg.cubicCapacity || '110'} CC | Year: ${reg.year || '2023'}`;
 
-      // Finance Status
+      // 9. Financed Status (Direct View, No Accordion Toggle)
       const financier = reg.financierName || '';
       const financeBadge = document.getElementById('financeBadge');
       if (financier && financier.trim() !== '') {
@@ -1071,7 +1102,7 @@
         document.getElementById('financierName').innerText = 'No Active Hypothecation';
       }
 
-      // Insurance Details Centering Logic
+      // 10. Insurance Details
       document.getElementById('policyNo').innerText = reg.prePolicyNo || prem.previousPolicyNumber || 'N/A';
       const insExpiryStr = reg.insuranceValidUpto || reg.insuranceUpto || prem.insuranceExpiryDate || null;
       const insStatusGroup = document.getElementById('insuranceStatusGroup');
@@ -1097,12 +1128,6 @@
         insContainer.className = 'insurance-centered';
       }
 
-      notifyParentIframe();
-    }
-
-    function toggleFinanceAccordion() {
-      const content = document.getElementById('financeAccordion');
-      content.classList.toggle('expanded');
       notifyParentIframe();
     }
 
