@@ -290,7 +290,6 @@
       flex-wrap: wrap;
     }
 
-    /* MODIFICATION 2: Yellow Dark color for vehicle model title */
     .vehicle-title {
       font-size: 1.8rem;
       font-weight: 800;
@@ -443,7 +442,6 @@
       justify-content: space-between;
     }
 
-    /* MODIFICATION 3: Center-aligned CSS helper for insurance box when alone */
     .insurance-centered {
       display: flex;
       flex-direction: column;
@@ -672,7 +670,6 @@
             <div class="field-label">Vehicle Model</div>
             <div id="cardModel" class="field-value">--</div>
           </div>
-          <!-- MODIFICATION 3: Variant hideable group -->
           <div class="field-group" id="variantGroup" style="display: none;">
             <div class="field-label">Variant</div>
             <div id="cardVariant" class="field-value">--</div>
@@ -711,7 +708,7 @@
           </div>
         </div>
 
-        <!-- 4. IMPORTANT DATES CARD -->
+        <!-- 4. IMPORTANT DATES CARD (5th BOX WITH 15-YEAR FITNESS LOGIC) -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div>
@@ -801,7 +798,6 @@
             <div class="card-icon"><i class="fa-solid fa-file-contract"></i></div>
             <div class="card-title">Insurance Details</div>
           </div>
-          <!-- MODIFICATION 3: Container wrapper for centering Policy Number when alone -->
           <div id="insuranceContainer">
             <div class="field-group">
               <div class="field-label">Previous Policy Number</div>
@@ -851,6 +847,24 @@
           btn.innerHTML = `<i class="fa-solid fa-bolt"></i> Fetch Details`;
         }
       }, 1000);
+    }
+
+    /* HELPER: Calculate 15 Years Private Fitness Expiry Date */
+    function calculate15YearsFitness(regDateStr) {
+      if (!regDateStr) return null;
+      const parsedDate = new Date(regDateStr);
+      if (isNaN(parsedDate.getTime())) return null;
+
+      // Add 15 years and minus 1 day
+      parsedDate.setFullYear(parsedDate.getFullYear() + 15);
+      parsedDate.setDate(parsedDate.getDate() - 1);
+
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const day = String(parsedDate.getDate()).padStart(2, '0');
+      const month = months[parsedDate.getMonth()];
+      const year = parsedDate.getFullYear();
+
+      return `${day}-${month}-${year}`;
     }
 
     async function fetchVehicleData() {
@@ -928,7 +942,7 @@
       const makeModel = `${reg.make || ''} ${reg.model || ''}`.trim() || 'Vehicle Details';
       document.getElementById('vehicleModelTitle').innerText = makeModel;
 
-      // MODIFICATION 1: Accurate Vehicle Icon matching (Including Piaggio Ape, Auto, Rickshaw, 3-Wheelers)
+      // Accurate Vehicle Icon matching
       const iconElem = document.getElementById('vehicleTypeIcon');
       const bodyType = (reg.bodyType || '').toUpperCase();
       const modelName = (reg.model || '').toUpperCase();
@@ -940,14 +954,17 @@
                          bodyType.includes('RICKSHAW') || modelName.includes('APE') || modelName.includes('RKS') || 
                          makeName.includes('PIAGGIO') || modelName.includes('3-WHEELER');
 
+      const is2Wheeler = vertical === 'TW' || seating <= 2 || bodyType.includes('TWO') || bodyType.includes('SCOOTER') || bodyType.includes('MOTORCYCLE') || bodyType.includes('M-CYCLE');
+      const isCommercial = vertical === 'CV' || bodyType.includes('TRUCK') || bodyType.includes('BUS') || bodyType.includes('GOODS') || bodyType.includes('TAXI') || bodyType.includes('COMMERCIAL') || is3Wheeler;
+
       if (is3Wheeler) {
-        iconElem.className = 'fa-solid fa-taxi vehicle-svg-glow'; // 3-Wheeler Auto/Tempo Icon
-      } else if (vertical === 'TW' || seating <= 2 || bodyType.includes('TWO') || bodyType.includes('SCOOTER') || bodyType.includes('MOTORCYCLE')) {
-        iconElem.className = 'fa-solid fa-motorcycle vehicle-svg-glow'; // 2-Wheeler
-      } else if (vertical === 'CV' || bodyType.includes('TRUCK') || bodyType.includes('BUS') || bodyType.includes('GOODS')) {
-        iconElem.className = 'fa-solid fa-truck-front vehicle-svg-glow'; // Commercial Truck
+        iconElem.className = 'fa-solid fa-taxi vehicle-svg-glow';
+      } else if (is2Wheeler) {
+        iconElem.className = 'fa-solid fa-motorcycle vehicle-svg-glow';
+      } else if (isCommercial) {
+        iconElem.className = 'fa-solid fa-truck-front vehicle-svg-glow';
       } else {
-        iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow'; // Car / 4-Wheeler
+        iconElem.className = 'fa-solid fa-car-side vehicle-svg-glow';
       }
 
       // Fuel & Norms
@@ -970,7 +987,7 @@
       document.getElementById('cardMake').innerText = reg.make || prem.make || 'N/A';
       document.getElementById('cardModel').innerText = reg.model || prem.model || 'N/A';
 
-      // MODIFICATION 3: Variant visibility check (completely hide if null/NA/missing)
+      // Variant group
       const variantVal = prem.variant || reg.displayVariant || null;
       const variantGroup = document.getElementById('variantGroup');
       if (variantVal && variantVal !== 'N/A' && variantVal !== 'null' && variantVal.trim() !== '') {
@@ -990,11 +1007,22 @@
       document.getElementById('rtoDetails').innerText = `${rtoLoc} (${rtoCode})`;
       document.getElementById('stateCode').innerText = prem.stateCode || reg.reg1 || 'MH';
 
-      document.getElementById('regDate').innerText = reg.registrationDate || 'N/A';
+      const regDateStr = reg.registrationDate || 'N/A';
+      document.getElementById('regDate').innerText = regDateStr;
 
-      // Fitness Date
-      const fitnessVal = reg.fitnessValidUpto || reg.fitValidUpto || reg.fitnessUpto || null;
+      // 15-YEAR PRIVATE FITNESS LOGIC FOR 2WL AND 4WL PRIVATE CARS
+      let fitnessVal = reg.fitnessValidUpto || reg.fitValidUpto || reg.fitnessUpto || null;
       const fitnessGroup = document.getElementById('fitnessDateGroup');
+
+      const isPrivate2W4W = !isCommercial && (is2Wheeler || vertical === 'PV' || vertical === '4W' || bodyType.includes('CAR') || bodyType.includes('SEDAN') || bodyType.includes('HATCHBACK') || bodyType.includes('SUV'));
+
+      if (isPrivate2W4W && regDateStr && regDateStr !== 'N/A') {
+        const calculatedFitness = calculate15YearsFitness(regDateStr);
+        if (calculatedFitness) {
+          fitnessVal = calculatedFitness;
+        }
+      }
+
       if (fitnessVal && fitnessVal !== 'null' && fitnessVal !== 'N/A') {
         document.getElementById('fitnessDate').innerText = fitnessVal;
         fitnessGroup.style.display = 'block';
@@ -1043,7 +1071,7 @@
         document.getElementById('financierName').innerText = 'No Active Hypothecation';
       }
 
-      // MODIFICATION 3: Insurance Box Centering & Active Status Logic
+      // Insurance Details Centering Logic
       document.getElementById('policyNo').innerText = reg.prePolicyNo || prem.previousPolicyNumber || 'N/A';
       const insExpiryStr = reg.insuranceValidUpto || reg.insuranceUpto || prem.insuranceExpiryDate || null;
       const insStatusGroup = document.getElementById('insuranceStatusGroup');
@@ -1063,10 +1091,10 @@
 
       if (isActive) {
         insStatusGroup.style.display = 'block';
-        insContainer.className = ''; // Standard top-to-bottom layout
+        insContainer.className = '';
       } else {
         insStatusGroup.style.display = 'none';
-        insContainer.className = 'insurance-centered'; // Perfectly center aligned when policy number is alone
+        insContainer.className = 'insurance-centered';
       }
 
       notifyParentIframe();
