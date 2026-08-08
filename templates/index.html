@@ -659,7 +659,7 @@
           </div>
         </div>
 
-        <!-- 3. NEW BOX: VEHICLE CATEGORY & BODY (MODIFICATION 3) -->
+        <!-- 3. NEW BOX: VEHICLE CATEGORY & BODY -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-car-side"></i></div>
@@ -707,7 +707,7 @@
           </div>
         </div>
 
-        <!-- 6. IMPORTANT DATES CARD (WITH ACCURATE 15-YEAR FITNESS FIX) -->
+        <!-- 6. IMPORTANT DATES CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-calendar-check"></i></div>
@@ -772,7 +772,7 @@
           </div>
         </div>
 
-        <!-- 9. DIRECT FINANCED STATUS CARD (PERMANENT NO TOGGLE) -->
+        <!-- 9. DIRECT FINANCED STATUS CARD -->
         <div class="data-card">
           <div class="card-header">
             <div class="card-icon"><i class="fa-solid fa-building-columns"></i></div>
@@ -1004,7 +1004,23 @@
         fuelBadge.classList.remove('diesel-ev');
       }
 
-      document.getElementById('normBadge').innerHTML = `<i class="fa-solid fa-leaf"></i> ${prem.variant || 'BS-VI / Standard'}`;
+      // Dynamic Emission Norm Logic with Fallbacks
+      const emissionNorm = reg.emissionNorm || reg.emission_norm || data.emissionNorm || data.emission_norm;
+      const variant = prem.variant || reg.variant || data.variant;
+      const model = reg.model || prem.model || data.model;
+
+      let normDisplayText = '';
+      if (emissionNorm && String(emissionNorm).trim() !== '' && String(emissionNorm).trim() !== 'null' && String(emissionNorm).trim() !== 'N/A') {
+        normDisplayText = emissionNorm;
+      } else if (variant && String(variant).trim() !== '' && String(variant).trim() !== 'null' && String(variant).trim() !== 'N/A') {
+        normDisplayText = variant;
+      } else if (model && String(model).trim() !== '' && String(model).trim() !== 'null' && String(model).trim() !== 'N/A') {
+        normDisplayText = model;
+      } else {
+        normDisplayText = 'Standard';
+      }
+
+      document.getElementById('normBadge').innerHTML = `<i class="fa-solid fa-leaf"></i> ${normDisplayText}`;
 
       // 1. Owner Information
       const ownerName = `${reg.ownerFirstName || ''} ${reg.ownerLastName || ''}`.trim() || 'Record Registered';
